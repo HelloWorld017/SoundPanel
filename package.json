@@ -1,0 +1,87 @@
+{
+  "name": "SoundPanel",
+  "version": "1.0.0",
+  "description": "A sound device manage console with loopback support",
+  "main": "src/index.js",
+  "scripts": {
+    "dev": "cross-env SOUNDPANEL_TARGET=web webpack-dev-server --inline --hot",
+    "watch": "cross-env SOUNDPANEL_TARGET=electron webpack --watch",
+    "dist": "npm run dist:webpack && npm run dist:electron",
+    "dist:electron": "cross-env NODE_ENV=production electron-builder",
+    "dist:webpack": "cross-env SOUNDPANEL_TARGET=electron NODE_ENV=production webpack",
+    "build": "npm run dist:webpack",
+    "build:web": "cross-env SOUNDPANEL_TARGET=web NODE_ENV=production webpack",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "pack": "cross-env NODE_ENV=production electron-builder --dir",
+    "start": "electron ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/HelloWorld017/SoundPanel.git"
+  },
+  "keywords": [
+    "electron",
+    "loopback",
+    "audio",
+    "mmdevice",
+    "monitor",
+    "mmsys"
+  ],
+  "author": "Khinenw",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/HelloWorld017/SoundPanel/issues"
+  },
+  "homepage": "https://github.com/HelloWorld017/SoundPanel#readme",
+  "dependencies": {
+    "@babel/runtime": "^7.5.5",
+    "@mdi/font": "^3.8.95",
+    "typeface-notosans-kor": "^1.0.2",
+    "uuid": "^3.3.2",
+    "vue": "^2.6.10"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.5.5",
+    "@babel/plugin-transform-runtime": "^7.5.5",
+    "@babel/preset-env": "^7.5.5",
+    "babel-loader": "^8.0.6",
+    "cross-env": "^5.2.0",
+    "css-loader": "^3.1.0",
+    "electron": "^5.0.7",
+    "electron-builder": "^21.1.1",
+    "electron-builder-squirrel-windows": "^21.1.2",
+    "file-loader": "^4.1.0",
+    "less": "^3.9.0",
+    "less-loader": "^5.0.0",
+    "mini-css-extract-plugin": "^0.8.0",
+    "vue-loader": "^15.7.1",
+    "vue-svg-loader": "^0.12.0",
+    "vue-template-compiler": "^2.6.10",
+    "webpack": "^4.36.1",
+    "webpack-cli": "^3.3.6",
+    "webpack-dev-server": "^3.7.2"
+  },
+  "build": {
+    "appId": "com.khinenw.soundpanel",
+    "files": [
+      "dist/**/*",
+      "src/**/*",
+      "index.html"
+    ],
+    "directories": {
+      "output": "bin"
+    },
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64",
+            "ia32"
+          ]
+        }
+      ],
+      "icon": "app/images/SoundpanelLogo.png"
+    }
+  }
+}
