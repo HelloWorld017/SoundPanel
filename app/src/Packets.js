@@ -5,12 +5,12 @@ class Packets {
 
 	sendPacket(name, payload) {
 		return new Promise((resolve, reject) => {
-			ipcRenderer.on(name, result => {
+			this.ipcRenderer.once(name, (sender, result) => {
 				if(!result.ok) return reject(result);
 				resolve(result);
 			});
 
-			ipcRenderer.send(name, payload);
+			this.ipcRenderer.send(name, payload);
 		});
 	}
 }

@@ -1,3 +1,4 @@
+const Device = require('./Device');
 const LoopedBack = require('looped-back');
 
 const roles = [LoopedBack.ROLE_CONSOLE, LoopedBack.ROLE_MULTIMEDIA, LoopedBack.ROLE_COMMUNICATION];
@@ -68,8 +69,8 @@ class DeviceManager {
 			const devices = this.app.looped.getDevices(type);
 			const defaults = this.app.looped.getDefaultEndpoint(type);
 
-			devices.forEach(device => {
-				const device = new Device(device.id, device.name, type);
+			devices.forEach(deviceObj => {
+				const device = new Device(deviceObj.id, deviceObj.name, type);
 				roles.forEach(role => {
 					if(defaults[role] === device.id) {
 						device.addRole(role);

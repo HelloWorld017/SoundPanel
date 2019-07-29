@@ -51,7 +51,21 @@ const mocks = {
 				type: 'preset',
 				id: 'Preset/5fb6495c-fe38-458c-9813-97e4b64100a4',
 				name: 'Play to Headset',
-				tasks: [],
+				tasks: [
+					{
+						id: 'Task/a0641f7f-844e-4bdd-8bda-54b8a2862cc9',
+						source: "{0.0.1.00000000}.{f4995d8e-bc6f-4766-b3f9-1b3193733f82}",
+						target: "{0.0.0.00000000}.{001e225d-2a30-4d40-8328-d0d6dd329b73}",
+						type: "task.loopback"
+					},
+
+					{
+						id: 'Task/67907516-1dad-4da6-b4c1-a2c29f1be48d',
+						device: "{0.0.0.00000000}.{001e225d-2a30-4d40-8328-d0d6dd329b73}",
+						role: {1: true},
+						type: "task.endpoint"
+					}
+				],
 				shortcuts: ['Control + Alt + Numpad1']
 			}
 		]

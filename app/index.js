@@ -6,6 +6,7 @@ import getMockData from "./src/Mock";
 import App from "./App.vue";
 import Vue from "vue";
 import Vuex from "vuex";
+import Packets from "./src/Packets";
 import WindowHandle from "./src/WindowHandle";
 
 Vue.use(Vuex);
@@ -48,7 +49,9 @@ const SoundPanel = {
 	},
 
 	async retrieveDevices() {
-		const {types, roles, devices} = (await this.packets.sendPacket('deviceManager.getDevices'));
+		const {devices: response} = (await this.packets.sendPacket('deviceManager.getDevices'));
+		const {types, roles, devices} = response;
+
 		this.TYPES = types;
 		this.ROLES = roles;
 

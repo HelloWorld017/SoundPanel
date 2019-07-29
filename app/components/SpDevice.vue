@@ -1,5 +1,10 @@
 <template>
-	<div class="SpDevice" :class="{'SpDevice--selected': selected}" :draggable="draggable"
+	<div class="SpDevice" :class="{
+			'SpDevice--selected': selected,
+			'SpDevice--removable': removable,
+			'SpDevice--minimal': minimal,
+			'SpDevice--select-disabled': disableSelect
+		}" :draggable="draggable"
 		@click="selectDevice()" @dragstart="dragStart">
 
 		<div class="SpDevice__content">
@@ -12,7 +17,7 @@
 				<span>{{friendlyName}}</span>
 			</div>
 
-			<div class="SpDevice__roles">
+			<div class="SpDevice__roles" v-if="!minimal">
 				<div class="SpDevice__role">
 					<sp-indicator :value="device.roles[roles.console]" :inverse="selected">
 						<i class="mdi mdi-check"></i>
@@ -29,7 +34,7 @@
 			</div>
 		</div>
 
-		<div class="SpDevice__loopback" v-if="loopback">
+		<div class="SpDevice__loopback" v-if="loopback && !minimal">
 			<loopback-icon class="LoopbackIcon"></loopback-icon> {{loopback.name}}
 		</div>
 	</div>
@@ -41,8 +46,72 @@
 		user-select: none;
 		background: #e4e5e6;
 		max-width: 350px;
-		
+
 		transition: all .4s ease;
+
+		&--removable {
+			position: relative;
+
+			&::after {
+				content: '\00d7';
+
+				position: absolute;
+				top: 0;
+				left: 0;
+				right: 0;
+				bottom: 0;
+
+				display: flex;
+				align-items: center;
+				justify-content: center;
+
+				color: #fff;
+				font-size: 1.3rem;
+
+				background: rgba(0, 0, 0, .8);
+				pointer-events: none;
+
+				opacity: 0;
+				transition: opacity .4s ease;
+			}
+
+			&:hover::after {
+				opacity: 1;
+			}
+		}
+
+		&--minimal {
+			padding-right: 10px;
+		}
+
+		&--minimal & {
+			&__content {
+				height: 72px;
+			}
+
+			&__texts {
+				h2 {
+					font-size: 1.2rem;
+				}
+
+				span {
+					font-size: .8rem;
+				}
+
+				padding-left: 10px;
+			}
+
+			&__icon {
+				width: 48px;
+				height: 48px;
+				line-height: 48px;
+				font-size: 1.5rem;
+			}
+		}
+
+		&--select-disabled {
+			cursor: default;
+		}
 
 		&--selected {
 			background: #00bcd4;
@@ -116,6 +185,10 @@
 			font-family: 'Noto Sans KR', sans-serif;
 			transition: color .4s ease;
 
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
+
 			.LoopbackIcon * {
 				transition: stroke .4s ease;
 			}
@@ -144,7 +217,10 @@
 			},
 
 			draggable: Boolean,
-			selected: Boolean
+			selected: Boolean,
+			disableSelect: Boolean,
+			removable: Boolean,
+			minimal: Boolean
 		},
 
 		computed: {

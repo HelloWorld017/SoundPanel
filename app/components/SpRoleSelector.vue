@@ -5,7 +5,7 @@
 				Default
 			</span>
 
-			<sp-checkbox v-model="console" :disabled="defaultConsole"></sp-checkbox>
+			<sp-checkbox v-model="console" :disabled="asIs || defaultConsole"></sp-checkbox>
 		</div>
 
 		<div class="SpRoleSelector__row">
@@ -13,7 +13,7 @@
 				Multimedia
 			</span>
 
-			<sp-checkbox v-model="multimedia" :disabled="defaultMultimedia"></sp-checkbox>
+			<sp-checkbox v-model="multimedia" :disabled="asIs || defaultMultimedia"></sp-checkbox>
 		</div>
 
 		<div class="SpRoleSelector__row">
@@ -21,7 +21,7 @@
 				Communication
 			</span>
 
-			<sp-checkbox v-model="communication" :disabled="defaultCommunication"></sp-checkbox>
+			<sp-checkbox v-model="communication" :disabled="asIs || defaultCommunication"></sp-checkbox>
 		</div>
 	</div>
 </template>
@@ -61,7 +61,9 @@
 			roles: {
 				type: Object,
 				required: true
-			}
+			},
+
+			asIs: Boolean
 		},
 
 		computed: {

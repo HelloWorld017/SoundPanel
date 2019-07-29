@@ -21,13 +21,22 @@
 			<sp-keys :keys="preset.shortcuts" @add="addShortcut" @remove="removeShortcut"></sp-keys>
 		</div>
 
-		<div class="SpPreset__tasks">
-			<sp-task v-for="task in preset.tasks" :task="task" :key="task.id"></sp-task>
+		<transition-group class="SpPreset__tasks" name="ListFade" tag="div">
+			<sp-task class="SpPreset__task" v-for="(task, index) in preset.tasks"
+				:key="task.id" @remove="removeTask(task.id)" removable>
 
-			<a class="SpPreset__task SpPreset__task--add" @click="newTask">
+				<h3>Task #{{index}}</h3>
+				<component class="SpPreset__task__content" :is="getTaskByTaskID(task.type)" :task="task"></component>
+			</sp-task>
+
+			<sp-task class="SpPreset__task SpPreset__task--edit" v-if="editingTask" key="NewTask">
+				<sp-task-new v-model="editingTask" @apply="finishNewTask" @cancel="cancelNewTask"></sp-task-new>
+			</sp-task>
+
+			<sp-task class="SpPreset__task SpPreset__task--add" @click="startNewTask" v-else key="NewTaskButton">
 				<i class="mdi mdi-plus"></i> New Task
-			</a>
-		</div>
+			</sp-task>
+		</transition-group>
 	</div>
 </template>
 
@@ -35,6 +44,7 @@
 	.SpPreset {
 		padding: 20px;
 		box-sizing: border-box;
+		overflow: auto;
 
 		h1 {
 			font-family: 'Fira Sans', sans-serif;
@@ -72,18 +82,50 @@
 				color: #f1f2f3;
 			}
 		}
+
+		&__tasks {
+			position: relative;
+		}
+
+		&__task {
+			display: flex;
+			flex-direction: column;
+			align-items: stretch;
+			box-sizing: border-box;
+			margin-top: 20px;
+
+			h3 {
+				margin: 0;
+				font-weight: 400;
+			}
+
+			&--add {
+				cursor: pointer;
+				flex-direction: row;
+				align-items: center;
+			}
+
+			&__content {
+				padding-left: 20px;
+			}
+		}
 	}
 </style>
 
 <script>
 	import SpHoldButton from "../components/SpHoldButton.vue";
 	import SpKeys from "../components/SpKeys.vue";
+	import SpTask from "../components/SpTask.vue";
+	import SpTaskNew from "./SpTaskNew.vue";
+
+	import {getTaskByTaskID} from "../src/TaskLayout";
 
 	export default {
 		data() {
 			return {
 				editMode: false,
-				name: ''
+				name: '',
+				editingTask: null
 			};
 		},
 
@@ -96,7 +138,7 @@
 
 		methods: {
 			async remove() {
-				await $soundpanel.packets.sendPacket('presetManager.removePreset')
+				await $soundpanel.packets.sendPacket('presetManager.removePreset', {id: this.preset.id});
 			},
 
 			async addShortcut(key) {
@@ -135,14 +177,38 @@
 				this.editMode = false;
 			},
 
-			newTask() {
+			startNewTask() {
+				this.editingTask = {};
+			},
 
-			}
+			async finishNewTask() {
+				await $soundpanel.packets.sendPacket('preset.addTask', {
+					id: this.preset.id,
+					task: this.editingTask
+				});
+
+				this.editingTask = null;
+			},
+
+			cancelNewTask() {
+				this.editingTask = null;
+			},
+
+			async removeTask(id) {
+				await $soundpanel.packets.sendPacket('preset.removeTask', {
+					id: this.preset.id,
+					taskId: id
+				});
+			},
+
+			getTaskByTaskID
 		},
 
 		components: {
 			SpHoldButton,
-			SpKeys
+			SpKeys,
+			SpTask,
+			SpTaskNew
 		}
 	};
 </script>

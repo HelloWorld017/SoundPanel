@@ -1,7 +1,11 @@
-const {app, globalShortcut} = require('electron');
+const {app, globalShortcut, protocol} = require('electron');
+const path = require('path');
+const registerPackets = require('./Packets');
 
+const {BrowserWindow} = require('electron');
 const DeviceManager = require('./device/DeviceManager');
 const PresetManager = require('./preset/PresetManager');
+const LoopedBack = require('looped-back');
 
 class SoundPanel {
 	constructor() {
@@ -18,15 +22,15 @@ class SoundPanel {
 	async init() {
 		await this.readPresets();
 
+		registerPackets(this);
+
 		this.registerProtocol();
 		this.presetManager.presets.forEach(preset => {
 			this.registerShortcut(preset.shortcut);
 		});
 
 		app.on('window-all-closed', () => {
-			if(!this.launcher.store.state.config.general.closeMeansMinimize) {
-				this.beforeExit();
-			}
+			this.beforeExit();
 		});
 	}
 
@@ -64,6 +68,7 @@ class SoundPanel {
 			});
 
 			this.mainWindow.loadURL('soundpanel://voltexpanel/');
+			this.mainWindow.toggleDevTools();
 		});
 	}
 
@@ -113,7 +118,7 @@ class SoundPanel {
 		}, 1000);
 	}
 
-	await writePresets() {
+	async writePresets() {
 		try {
 			const rawPreset = JSON.stringify(this.presetManager.exportPresets());
 			await fs.promises.writeFile(this.configPath, rawPreset);

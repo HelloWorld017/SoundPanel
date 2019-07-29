@@ -1,7 +1,7 @@
 const Preset = require('./preset/Preset');
 const {ipcMain} = require('electron');
 
-export default function registerPackets(app) {
+module.exports = function registerPackets(app) {
 	ipcMain.on('app.refresh', ({sender}) => {
 		app.deviceManager.refresh();
 		app.presetManager.refresh();

@@ -25,6 +25,7 @@
 		font-weight: 600;
 		font-family: 'Fira Sans';
 		font-size: 1.2rem;
+		text-align: center;
 		transition: all .4s ease;
 
 		* {

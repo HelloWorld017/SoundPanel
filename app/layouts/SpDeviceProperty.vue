@@ -7,16 +7,13 @@
 			</div>
 
 			<div class="SpDeviceProperty__buttons">
-				<button class="SpDeviceProperty__button SpDeviceProperty__button--primary"
-					:class="{'SpDeviceProperty__button--disabled': !hasThingsToUpdate}"
-					@click="apply">
-
+				<sp-button primary :disabled="!hasThingsToUpdate" @click="apply">
 					Apply
-				</button>
+				</sp-button>
 
-				<button class="SpDeviceProperty__button" @click="hide">
+				<sp-button @click="hide">
 					Cancel
-				</button>
+				</sp-button>
 			</diV>
 		</div>
 
@@ -27,9 +24,7 @@
 
 		<div class="SpDeviceProperty__property" v-if="isCaptureDevice">
 			<h3>Loopback Device</h3>
-			<div class="SpDeviceProperty__loopback" v-if="loopbackDevice">
-				<sp-device :device="loopbackDevice" @select="loopback = null"></sp-device>
-			</div>
+			<sp-device v-if="loopbackDevice" :device="loopbackDevice" @select="loopback = null" removable></sp-device>
 			<sp-placeholder v-else type="render" @device="loopback = $event"></sp-placeholder>
 		</div>
 	</div>
@@ -70,26 +65,6 @@
 			margin-left: 5px;
 		}
 
-		&__button {
-			cursor: pointer;
-			background: #404040;
-			padding: 10px 20px;
-			margin: 2px;
-			border: none;
-			outline: none;
-			color: #fff;
-			font-family: 'Fira Sans', sans-serif;
-
-			&--primary {
-				background: #00bcd4;
-			}
-
-			&--disabled {
-				cursor: not-allowed;
-				background: #d0d0d0;
-			}
-		}
-
 		&__property {
 			font-family: 'Fira Sans', sans-serif;
 			margin-top: 10px;
@@ -103,41 +78,11 @@
 				margin-left: 10px;
 			}
 		}
-
-		&__loopback {
-			position: relative;
-
-			&::after {
-				content: '\00d7';
-
-				position: absolute;
-				top: 0;
-				left: 0;
-				right: 0;
-				bottom: 0;
-
-				display: flex;
-				align-items: center;
-				justify-content: center;
-
-				color: #fff;
-				font-size: 1.3rem;
-
-				background: rgba(0, 0, 0, .8);
-				pointer-events: none;
-
-				opacity: 0;
-				transition: opacity .4s ease;
-			}
-
-			&:hover::after {
-				opacity: 1;
-			}
-		}
 	}
 </style>
 
 <script>
+	import SpButton from "../components/SpButton.vue";
 	import SpDevice from "../components/SpDevice.vue";
 	import SpPlaceholder from "../components/SpPlaceholder.vue";
 	import SpRoleSelector from "../components/SpRoleSelector.vue";
@@ -171,7 +116,7 @@
 
 			roles: {
 				get() {
-					return this.updatingRole || this.device.roles;
+					return this.updatingRole !== undefined ? this.updatingRole : this.device.roles;
 				},
 
 				async set(role) {
@@ -194,7 +139,7 @@
 			},
 
 			hasThingsToUpdate() {
-				return !!(this.updatingRole || this.updatingLoopback);
+				return this.updatingRole !== undefined || this.updatingLoopback !== undefined;
 			},
 
 			isCaptureDevice() {
@@ -225,6 +170,7 @@
 				}
 
 				this.$emit('refresh');
+				this.$emit('hide');
 			},
 
 			async hide() {
@@ -239,6 +185,7 @@
 		},
 
 		components: {
+			SpButton,
 			SpDevice,
 			SpPlaceholder,
 			SpRoleSelector

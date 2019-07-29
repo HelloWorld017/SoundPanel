@@ -13,7 +13,8 @@
     "build:web": "cross-env SOUNDPANEL_TARGET=web NODE_ENV=production webpack",
     "test": "echo \"Error: no test specified\" && exit 1",
     "pack": "cross-env NODE_ENV=production electron-builder --dir",
-    "start": "electron ."
+    "start": "electron .",
+    "postinstall": "electron-rebuild"
   },
   "repository": {
     "type": "git",
@@ -36,6 +37,7 @@
   "dependencies": {
     "@babel/runtime": "^7.5.5",
     "@mdi/font": "^3.8.95",
+    "looped-back": "^1.0.0",
     "typeface-notosans-kor": "^1.0.2",
     "uuid": "^3.3.2",
     "vue": "^2.6.10"
@@ -44,16 +46,20 @@
     "@babel/core": "^7.5.5",
     "@babel/plugin-transform-runtime": "^7.5.5",
     "@babel/preset-env": "^7.5.5",
+    "autoprefixer": "^9.6.1",
     "babel-loader": "^8.0.6",
     "cross-env": "^5.2.0",
     "css-loader": "^3.1.0",
     "electron": "^5.0.7",
     "electron-builder": "^21.1.1",
     "electron-builder-squirrel-windows": "^21.1.2",
+    "electron-rebuild": "^1.8.5",
     "file-loader": "^4.1.0",
     "less": "^3.9.0",
     "less-loader": "^5.0.0",
     "mini-css-extract-plugin": "^0.8.0",
+    "postcss": "^7.0.17",
+    "postcss-loader": "^3.0.0",
     "vue-loader": "^15.7.1",
     "vue-svg-loader": "^0.12.0",
     "vue-template-compiler": "^2.6.10",
@@ -83,5 +89,8 @@
       ],
       "icon": "app/images/SoundpanelLogo.png"
     }
-  }
+  },
+  "browserslist": [
+    "last 2 Electron versions"
+  ]
 }

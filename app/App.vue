@@ -105,6 +105,7 @@
 		&-leave{
 			&-active {
 				 position: absolute;
+				 width: 100%;
 			}
 
 			&-to {

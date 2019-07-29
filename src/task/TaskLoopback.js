@@ -1,4 +1,4 @@
-const Task = require("../Task");
+const Task = require("./Task");
 
 class TaskLoopback extends Task {
 	constructor(app, source, target) {
@@ -30,8 +30,8 @@ class TaskLoopback extends Task {
 		return {
 			type: this.type,
 			id: this.id,
-			device: this.device.id,
-			role: this.role
+			source: this.sourceDevice.id,
+			target: this.targetDevice.id
 		};
 	}
 

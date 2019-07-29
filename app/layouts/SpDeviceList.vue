@@ -13,7 +13,7 @@
 		</div>
 
 		<div class="SpDeviceList__list" @click="unselectDevice" ref="list">
-			<transition-group class="SpDeviceList__devices" name="ListFade" mode="out-in" tag="div">
+			<transition-group class="SpDeviceList__devices" name="ListFade" tag="div">
 				<sp-device v-for="device in devices"
 					:device="device" :key="device.id"
 					:selected="selectedDeviceId === device.id"
@@ -58,7 +58,12 @@
 		}
 
 		&__devices {
+			position: relative;
+			width: 100%;
+			overflow: hidden;
+
 			& > * {
+				box-sizing: border-box;
 				margin-top: 20px;
 			}
 		}

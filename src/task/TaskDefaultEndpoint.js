@@ -1,4 +1,4 @@
-const Task = require("../Task");
+const Task = require("./Task");
 
 class TaskDefaultEndpoint extends Task {
 	constructor(app, device, role) {
@@ -11,10 +11,14 @@ class TaskDefaultEndpoint extends Task {
 	execute() {
 		if(this.device.unknown) return;
 
-		this.app.deviceManager.setDefaultEndpoint(
-			this.device.id,
-			this.role
-		);
+		for(let key in this.role) {
+			if(this.role[key]) {
+				this.app.deviceManager.setDefaultEndpoint(
+					this.device.id,
+					key
+				);
+			}
+		}
 	}
 
 	refresh() {
