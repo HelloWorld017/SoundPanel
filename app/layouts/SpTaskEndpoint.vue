@@ -34,6 +34,7 @@
 
 		&__device {
 			flex-basis: 45%;
+			min-width: 0;
 		}
 
 		&__label {

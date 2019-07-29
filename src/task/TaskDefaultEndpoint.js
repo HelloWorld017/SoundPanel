@@ -41,7 +41,7 @@ class TaskDefaultEndpoint extends Task {
 	static importTask(app, taskObject) {
 		const device = app.deviceManager.findDeviceById(taskObject.device, true);
 
-		const task = new TaskEndpoint(app, device, taskObject.role);
+		const task = new TaskDefaultEndpoint(app, device, taskObject.role);
 		task.id = taskObject.id;
 
 		return task;

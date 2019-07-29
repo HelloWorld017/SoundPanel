@@ -16,7 +16,7 @@ class PresetManager {
 	}
 
 	getPreset(presetId) {
-		this.presets.get(presetId);
+		return this.presets.get(presetId);
 	}
 
 	removePreset(presetId) {

@@ -73,6 +73,7 @@
 			font-family: 'Noto Sans KR', sans-serif;
 			font-size: 1.2rem;
 			padding: 5px 10px;
+			background: transparent;
 			border: none;
 			border-bottom: 2px solid #202020;
 			outline: none;
@@ -139,6 +140,8 @@
 		methods: {
 			async remove() {
 				await $soundpanel.packets.sendPacket('presetManager.removePreset', {id: this.preset.id});
+
+				this.$emit('refresh');
 			},
 
 			async addShortcut(key) {
@@ -187,6 +190,7 @@
 					task: this.editingTask
 				});
 
+				this.$emit('refresh');
 				this.editingTask = null;
 			},
 
@@ -199,6 +203,8 @@
 					id: this.preset.id,
 					taskId: id
 				});
+
+				this.$emit('refresh');
 			},
 
 			getTaskByTaskID

@@ -40,6 +40,7 @@
 
 		&__device {
 			flex: 1;
+			min-width: 0;
 		}
 
 		&__label {

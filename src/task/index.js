@@ -1,3 +1,4 @@
+const Task = require('./Task');
 const TaskDefaultEndpoint = require('./TaskDefaultEndpoint');
 const TaskLoopback = require('./TaskLoopback');
 
@@ -14,6 +15,7 @@ module.exports = {
 		return null;
 	},
 
+	Task,
 	TaskDefaultEndpoint,
 	TaskLoopback
 };

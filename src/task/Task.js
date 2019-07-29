@@ -3,6 +3,7 @@ const uuidv4 = require('uuid/v4');
 class Task {
 	constructor(app) {
 		this.app = app;
+		this.type = this.constructor.type;
 		this.id = `Task/${uuidv4()}`;
 	}
 

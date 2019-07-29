@@ -81,6 +81,8 @@
 		font-weight: 100;
 		color: #fff;
 
+		z-index: 10;
+
 		input {
 			width: 1px;
 			height: 1px;

@@ -41,7 +41,8 @@ module.exports = function registerPackets(app) {
 	ipcMain.on('preset.setName', ({sender}, {id, name}) => {
 		const preset = app.presetManager.getPreset(id);
 		if(!preset) return sender.send('preset.setName', {
-				ok: false
+				ok: false,
+				reason: 'No Such Preset'
 			});
 
 		preset.setName(name);
@@ -55,7 +56,8 @@ module.exports = function registerPackets(app) {
 	ipcMain.on('preset.addTask', ({sender}, {id, task}) => {
 		const preset = app.presetManager.getPreset(id);
 		if(!preset) return sender.send('preset.addTask', {
-				ok: false
+				ok: false,
+				reason: 'No Such Preset'
 			});
 
 		const result = preset.addTaskFromObject(task);
@@ -69,7 +71,8 @@ module.exports = function registerPackets(app) {
 	ipcMain.on('preset.removeTask', ({sender}, {id, taskId}) => {
 		const preset = app.presetManager.getPreset(id);
 		if(!preset) return sender.send('preset.removeTask', {
-				ok: false
+				ok: false,
+				reason: 'No Such Preset'
 			});
 
 		preset.removeTask(taskId);
@@ -83,7 +86,8 @@ module.exports = function registerPackets(app) {
 	ipcMain.on('preset.addShortcut', ({sender}, {id, shortcut}) => {
 		const preset = app.presetManager.getPreset(id);
 		if(!preset) return sender.send('preset.addShortcut', {
-				ok: false
+				ok: false,
+				reason: 'No Such Preset'
 			});
 
 		const result = preset.addShortcut(shortcut);
@@ -97,7 +101,8 @@ module.exports = function registerPackets(app) {
 	ipcMain.on('preset.removeShortcut', ({sender}, {id, shortcut}) => {
 		const preset = app.presetManager.getPreset(id);
 		if(!preset) return sender.send('preset.removeShortcut', {
-				ok: false
+				ok: false,
+				reason: 'No Such Preset'
 			});
 
 		const result = preset.removeShortcut(shortcut);

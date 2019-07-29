@@ -1,8 +1,6 @@
 const {getTaskByType} = require('../task');
 const uuidv4 = require('uuid/v4');
 
-const Task = require('../task/Task');
-
 class Preset {
 	constructor(app, name) {
 		this.id = `Preset/${uuidv4()}`;
@@ -13,13 +11,13 @@ class Preset {
 	}
 
 	addShortcut(shortcut) {
-		const shortcutExists = app.presetManager.findPresetByShortcut(shortcut);
+		const shortcutExists = this.app.presetManager.findPresetByShortcut(shortcut);
 		if(shortcutExists) {
 			return false;
 		}
 
 		this.shortcuts.push(shortcut);
-		this.app.addShortcut(shortcut);
+		this.app.registerShortcut(shortcut);
 		return true;
 	}
 
@@ -41,11 +39,11 @@ class Preset {
 	addTaskFromObject(taskObject) {
 		const {type} = taskObject;
 		const TaskClass = getTaskByType(type);
-		if(!(TaskClass instanceof Task)) {
+		if(!TaskClass) {
 			return false;
 		}
 
-		const task = TaskClass.importTask(app, taskObject);
+		const task = TaskClass.importTask(this.app, taskObject);
 		this.addTask(task);
 
 		return true;
@@ -65,7 +63,7 @@ class Preset {
 	}
 
 	playExecuteSound() {
-		//TODO 
+		//TODO
 	}
 
 	refresh() {

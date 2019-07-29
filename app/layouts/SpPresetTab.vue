@@ -2,7 +2,7 @@
 	<section class="SpPresetTab">
 		<div class="SpPresetTab__aside">
 			<h1>Presets</h1>
-			<div class="SpPresetTab__list">
+			<transition-group class="SpPresetTab__list" name="ListFade" tag="div">
 				<a v-for="(preset, i) in presets"
 					class="PresetItem"
 					:class="{'PresetItem--selected': selected === i}"
@@ -13,10 +13,10 @@
 					<span class="PresetItem__tasks">{{preset.tasks.length}}</span>
 				</a>
 
-				<a class="PresetItem PresetItem--add" @click="addPreset">
+				<a class="PresetItem PresetItem--add" @click="addPreset" key="add">
 					<i class="mdi mdi-plus"></i> New Preset
 				</a>
-			</div>
+			</transition-group>
 		</div>
 
 		<div class="SpPresetTab__content">
@@ -39,6 +39,7 @@
 		display: flex;
 		background: #fff;
 		flex: 1;
+		min-width: 0;
 
 		h1 {
 			font-family: 'Fira Sans', sans-serif;
@@ -55,6 +56,7 @@
 		&__content {
 			background: #f8f9fa;
 			flex: 1;
+			min-width: 0;
 		}
 
 		&__preset {
@@ -77,6 +79,8 @@
 		}
 
 		&__list {
+			position: relative;
+
 			display: flex;
 			flex-direction: column;
 			align-items: center;
@@ -152,7 +156,8 @@
 			},
 
 			async addPreset() {
-				await $soundpanel.packets.sendPacket('presetManager.newPreset')
+				await $soundpanel.packets.sendPacket('presetManager.newPreset');
+				await this.refresh();
 			}
 		},
 

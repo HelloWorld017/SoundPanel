@@ -40,7 +40,7 @@ class TaskLoopback extends Task {
 		const target = app.deviceManager.findDeviceById(taskObject.target, true);
 
 		const task = new TaskLoopback(app, source, target);
-		task.id = taskObject.id;
+		if(taskObject.id) task.id = taskObject.id;
 
 		return task;
 	}
