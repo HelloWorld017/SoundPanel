@@ -27,7 +27,7 @@ class PresetManager {
 		this.presets.clear();
 
 		presetsObject.forEach(presetObject => {
-			manager.addPreset(Preset.importPreset(presetObject));
+			this.addPreset(Preset.importPreset(this.app, presetObject));
 		});
 	}
 

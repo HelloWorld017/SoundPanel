@@ -180,7 +180,7 @@
 
 		watch: {
 			'device.roles': function() {
-				this.updatingRole = null;
+				this.updatingRole = undefined;
 			}
 		},
 

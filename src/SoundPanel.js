@@ -1,4 +1,5 @@
 const {app, globalShortcut, protocol} = require('electron');
+const fs = require('fs');
 const path = require('path');
 const registerPackets = require('./Packets');
 
@@ -26,7 +27,7 @@ class SoundPanel {
 
 		this.registerProtocol();
 		this.presetManager.presets.forEach(preset => {
-			this.registerShortcut(preset.shortcut);
+			this.registerShortcut(preset.shortcuts);
 		});
 
 		app.on('window-all-closed', () => {
@@ -87,7 +88,7 @@ class SoundPanel {
 			const presetsObject = JSON.parse(rawPreset);
 			this.presetManager.importPresets(presetsObject);
 		} catch(e) {
-
+			console.error(e);
 		}
 	}
 
@@ -95,9 +96,10 @@ class SoundPanel {
 		if(Array.isArray(shortcut)) {
 			if(shortcut.length === 0) return;
 
-			return globalShortcut.registerAll(
-				shortcut, () => this.presetManager.findPresetByShortcut(shortcut[0]).execute()
-			);
+			// globalShortcut.registerAll doesn't work
+			return shortcut.forEach(sc => {
+				this.registerShortcut(sc);
+			});
 		}
 
 		return globalShortcut.register(
@@ -123,7 +125,7 @@ class SoundPanel {
 			const rawPreset = JSON.stringify(this.presetManager.exportPresets());
 			await fs.promises.writeFile(this.configPath, rawPreset);
 		} catch(e) {
-
+			console.error(e);
 		}
 	}
 

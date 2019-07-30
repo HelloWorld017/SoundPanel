@@ -58,6 +58,7 @@ class Preset {
 	}
 
 	execute() {
+		console.log("Execution Initiated!");
 		this.tasks.forEach(task => task.execute());
 		this.playExecuteSound();
 	}
@@ -85,7 +86,7 @@ class Preset {
 		preset.id = presetObject.id;
 		preset.shortcuts = presetObject.shortcuts;
 		presetObject.tasks.forEach(taskObject => {
-			this.addTaskFromObject(taskObject);
+			preset.addTaskFromObject(taskObject);
 		});
 
 		return preset;
