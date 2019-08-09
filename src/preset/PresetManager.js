@@ -1,7 +1,10 @@
+const EventEmitter = require('events');
 const Preset = require('./Preset');
 
-class PresetManager {
+class PresetManager extends EventEmitter {
 	constructor(app) {
+		super();
+
 		this.app = app;
 		this.presets = new Map();
 	}
@@ -13,6 +16,7 @@ class PresetManager {
 
 	addPreset(preset) {
 		this.presets.set(preset.id, preset);
+		this.emit('addPreset', preset);
 	}
 
 	getPreset(presetId) {
@@ -21,6 +25,7 @@ class PresetManager {
 
 	removePreset(presetId) {
 		this.presets.delete(presetId);
+		this.emit('removePreset', presetId);
 	}
 
 	importPresets(presetsObject) {

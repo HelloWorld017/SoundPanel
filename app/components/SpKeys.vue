@@ -62,6 +62,7 @@
 			}
 		}
 	}
+
 	.KeyDialog {
 		position: fixed;
 		display: flex;

@@ -2,6 +2,21 @@ const Preset = require('./preset/Preset');
 const {ipcMain} = require('electron');
 
 module.exports = function registerPackets(app) {
+	ipcMain.on('app.config', ({sender}, payload) => {
+		if(!payload) {
+			sender.send('app.config', {
+				ok: true,
+				configs: app.configs.exportConfigsComputed()
+			});
+			return;
+		}
+
+		app.configs.set(payload.key, payload.value);
+		sender.send('app.config', {
+			ok: true
+		});
+	});
+
 	ipcMain.on('app.refresh', ({sender}) => {
 		app.deviceManager.refresh();
 		app.presetManager.refresh();

@@ -3,10 +3,10 @@
 		<h1>
 			Preset:
 			<span v-if="!editMode" class="SpPreset__name">{{preset.name}}</span>
-			<input v-else
-				type="text" class="SpPreset__nameedit"
-				v-model="name" ref="editText"
-				@blur="updateName">
+			<sp-text-input v-else
+				class="SpPreset__nameedit" v-model="name"
+				ref="editText" @blur="updateName">
+			</sp-text-input>
 
 			<a class="SpPreset__edit" @click="setEditMode">
 				<i class="mdi mdi-pencil"></i>
@@ -69,21 +69,6 @@
 			font-size: 1.5rem;
 		}
 
-		&__nameedit {
-			font-family: 'Noto Sans KR', sans-serif;
-			font-size: 1.2rem;
-			padding: 5px 10px;
-			background: transparent;
-			border: none;
-			border-bottom: 2px solid #202020;
-			outline: none;
-
-			&::selection {
-				background: #202020;
-				color: #f1f2f3;
-			}
-		}
-
 		&__tasks {
 			position: relative;
 		}
@@ -118,6 +103,7 @@
 	import SpKeys from "../components/SpKeys.vue";
 	import SpTask from "../components/SpTask.vue";
 	import SpTaskNew from "./SpTaskNew.vue";
+	import SpTextInput from "../components/SpTextInput.vue";
 
 	import {getTaskByTaskID} from "../src/TaskLayout";
 
@@ -166,7 +152,7 @@
 				this.name = this.preset.name;
 				this.editMode = true;
 				this.$nextTick(() => {
-					this.$refs.editText.focus();
+					this.$refs.editText.$el.focus();
 				});
 			},
 
@@ -214,7 +200,8 @@
 			SpHoldButton,
 			SpKeys,
 			SpTask,
-			SpTaskNew
+			SpTaskNew,
+			SpTextInput
 		}
 	};
 </script>

@@ -9,5 +9,4 @@ protocol.registerSchemesAsPrivileged([{
 const soundPanel = new SoundPanel();
 app.on('ready', async () => {
 	await soundPanel.init();
-	await soundPanel.show();
 });

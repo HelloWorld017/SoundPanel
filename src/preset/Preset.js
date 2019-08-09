@@ -1,4 +1,5 @@
 const {getTaskByType} = require('../task');
+const player = require('node-wav-player');
 const uuidv4 = require('uuid/v4');
 
 class Preset {
@@ -58,13 +59,14 @@ class Preset {
 	}
 
 	execute() {
-		console.log("Execution Initiated!");
 		this.tasks.forEach(task => task.execute());
-		this.playExecuteSound();
+		this.playExecuteSound().catch(() => {});
 	}
 
-	playExecuteSound() {
-		//TODO
+	async playExecuteSound() {
+		await player.play({
+			path: this.app.configs.get('waveFile')
+		});
 	}
 
 	refresh() {

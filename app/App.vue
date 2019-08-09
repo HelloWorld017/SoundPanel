@@ -11,9 +11,17 @@
 		</div>
 
 		<main class="Main">
-			<sp-preset-tab></sp-preset-tab>
+			<sp-preset-tab>
+				<div class="ConfigButton">
+					<a class="ConfigButton__button" @click="toggleConfig">
+						<i class="mdi mdi-settings"></i>
+					</a>
+				</div>
+			</sp-preset-tab>
 			<sp-device-list></sp-device-list>
 		</main>
+
+		<sp-config class="Config" v-model="config"></sp-config>
 	</div>
 </template>
 
@@ -29,6 +37,7 @@
 	.Main {
 		display: flex;
 		flex: 1;
+		height: 100%;
 		transform: translate(0);
 	}
 
@@ -84,6 +93,14 @@
 			}
 		}
 	}
+
+	.ConfigButton {
+		&__button {
+			cursor: pointer;
+			font-size: 2rem;
+			color: #212223;
+		}
+	}
 </style>
 
 <style lang="less">
@@ -128,13 +145,21 @@
 
 <script>
 	import SoundpanelText from "./images/SoundpanelText.svg?component";
+	import SpConfig from "./layouts/SpConfig.vue";
 	import SpDeviceList from "./layouts/SpDeviceList.vue";
 	import SpPresetTab from "./layouts/SpPresetTab.vue";
 	import WindowButton from "./images/WindowButton.svg?component";
 
 	export default {
+		data() {
+			return {
+				config: false
+			};
+		},
+
 		components: {
 			SoundpanelText,
+			SpConfig,
 			SpDeviceList,
 			SpPresetTab,
 			WindowButton
@@ -148,6 +173,12 @@
 				return {
 					minimize: _=>{}, maximize: _=>{}, exit: _=>{}
 				};
+			}
+		},
+
+		methods: {
+			toggleConfig() {
+				this.config = !this.config;
 			}
 		}
 	};

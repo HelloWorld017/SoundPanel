@@ -12,11 +12,12 @@
 					<span class="PresetItem__name">{{preset.name}}</span>
 					<span class="PresetItem__tasks">{{preset.tasks.length}}</span>
 				</a>
-
+				
 				<a class="PresetItem PresetItem--add" @click="addPreset" key="add">
 					<i class="mdi mdi-plus"></i> New Preset
 				</a>
 			</transition-group>
+			<slot></slot>
 		</div>
 
 		<div class="SpPresetTab__content">
@@ -48,9 +49,12 @@
 		}
 
 		&__aside {
+			display: flex;
+			flex-direction: column;
+			box-sizing: border-box;
 			padding: 20px;
-			width: 22vw;
-			max-width: 300px;
+			width: 24vw;
+			max-width: 340px;
 		}
 
 		&__content {
@@ -65,6 +69,7 @@
 			&--empty {
 				display: flex;
 				align-items: center;
+				justify-content: center;
 				text-align: center;
 
 				color: #d0d0d0;
@@ -82,7 +87,10 @@
 			position: relative;
 
 			display: flex;
+			flex: 1;
 			flex-direction: column;
+
+			overflow: auto;
 			align-items: center;
 		}
 	}

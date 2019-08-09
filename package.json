@@ -37,10 +37,14 @@
   "dependencies": {
     "@babel/runtime": "^7.5.5",
     "@mdi/font": "^3.8.95",
+    "electron-is-dev": "^1.1.0",
     "looped-back": "^1.0.0",
+    "node-wav-player": "^0.1.0",
     "typeface-notosans-kor": "^1.0.2",
     "uuid": "^3.3.2",
-    "vue": "^2.6.10"
+    "vue": "^2.6.10",
+    "vue-styled-components": "^1.4.9",
+    "vuex": "^3.1.1"
   },
   "devDependencies": {
     "@babel/core": "^7.5.5",
@@ -70,9 +74,13 @@
   "build": {
     "appId": "com.khinenw.soundpanel",
     "files": [
+      "app/images/SoundPanelLogo.png",
       "dist/**/*",
       "src/**/*",
       "index.html"
+    ],
+    "extraFiles": [
+      "app/audio/notify.wav"
     ],
     "directories": {
       "output": "bin"
