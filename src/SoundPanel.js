@@ -50,7 +50,7 @@ class SoundPanel {
 
 		if(this.configs.get('enableTray')) {
 			const trayIcon = nativeImage.createFromPath(
-				path.resolve(__dirname, '..', 'app', 'images', 'SoundPanelLogo.png')
+				path.resolve(__dirname, '..', 'app', 'images', 'logo.png')
 			);
 
 			this.tray = new Tray(trayIcon);

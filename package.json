@@ -74,10 +74,10 @@
   "build": {
     "appId": "com.khinenw.soundpanel",
     "files": [
-      "app/images/SoundPanelLogo.png",
-      "dist/**/*",
       "src/**/*",
-      "index.html"
+      "index.html",
+	  "dist/**/*",
+	  "app/images/logo.png"
     ],
     "extraFiles": [
       "app/audio/notify.wav"
@@ -95,7 +95,7 @@
           ]
         }
       ],
-      "icon": "app/images/SoundpanelLogo.png"
+      "icon": "app/images/logo.png"
     }
   },
   "browserslist": [
