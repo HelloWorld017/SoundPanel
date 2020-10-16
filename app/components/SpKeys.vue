@@ -12,7 +12,12 @@
 			<div class="SpKeys__dialog KeyDialog" @click="keyInput = false" v-if="keyInput">
 				<div class="KeyDialog__help">
 					Click / ESC to cancel.<br>
-					Input &amp; Hold keys for 2s with modifier to add.
+					<template v-if="!currentInput">
+						Input keys with modifier to add.
+					</template>
+					<template v-else>
+						Hold current input for 2s!
+					</template>
 				</div>
 
 				<input type="text" ref="dialogKey"
@@ -99,6 +104,8 @@
 </style>
 
 <script>
+	import Packets from '../src/Packets';
+
 	import getKeyCode from "../src/Keycode";
 
 	export default {
@@ -148,16 +155,36 @@
 
 			handleKeyOff() {
 				this.currentInput = '';
-				this.currentInputId = null
+				this.currentInputId = null;
 			},
 
 			openDialog() {
 				this.currentInput = '';
+
+				$soundpanel.packets.sendPacket(
+					'shortcutManager.interrupt'
+				).then(({ result }) => {
+					if (result) {
+						this.addKey(result);
+						this.keyInput = false;
+					}
+				});
+
 				this.keyInput = true;
 
 				this.$nextTick(() => {
 					this.$refs.dialogKey.focus();
 				});
+			}
+		},
+
+		watch: {
+			keyInput (val) {
+				if (!val) {
+					$soundpanel.packets.sendPacket(
+						'shortcutManager.resume'
+					);
+				}
 			}
 		}
 	};

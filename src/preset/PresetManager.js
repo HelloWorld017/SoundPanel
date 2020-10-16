@@ -9,9 +9,9 @@ class PresetManager extends EventEmitter {
 		this.presets = new Map();
 	}
 
-	findPresetByShortcut(shortcut) {
+	findPresetsByShortcut(shortcut) {
 		return Array.from(this.presets.values())
-			.find(preset => preset.shortcuts.includes(shortcut));
+			.filter(preset => preset.shortcuts.includes(shortcut));
 	}
 
 	addPreset(preset) {

@@ -9,12 +9,20 @@ class TaskLoopback extends Task {
 	}
 
 	execute() {
-		if(this.sourceDevice.unknown || this.targetDevice.unknown) return;
+		if (this.sourceDevice.unknown || this.targetDevice.unknown) return;
 
 		this.app.deviceManager.setLoopback(
 			this.sourceDevice.id,
 			this.targetDevice.id
 		);
+	}
+
+	isActive() {
+		if (this.sourceDevice.unknown) return true;
+		if (this.targetDevice.unknown) return false;
+
+		const loopback = this.app.deviceManager.getLoopback(this.sourceDevice.id);
+		return loopback && loopback.id === this.targetDevice.id;
 	}
 
 	refresh() {

@@ -10,6 +10,10 @@ class Task {
 	execute() {}
 	refresh() {}
 
+	isActive() {
+		return true;
+	}
+
 	exportTask() {
 		return {};
 	}

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<title>SoundPanel - Notification</title>
+		<style>
+			body {
+				overflow: hidden;
+			}
+
+			#dialog {
+				position: absolute;
+				top: 50%;
+				left: 50%;
+				transform: translateX(-50%) translateY(-50%);
+
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				padding: 10px;
+
+				color: #fff;
+				font-family: 'Noto Sans KR', sans-serif;
+				font-size: 1rem;
+
+				background: rgba(0, 0, 0, .5);
+				opacity: 0;
+				transition: all 1s ease;
+			}
+
+			#dialog.active {
+				opacity: 1;
+				transform: translateX(-50%) translateY(-50%) translateY(-10px);
+			}
+		</style>
+	</head>
+
+	<body>
+	    <div id="dialog"></div>
+
+		<script>
+			const { ipcRenderer } = require('electron');
+			const dialog = document.querySelector('#dialog');
+			let dialogKey;
+
+			ipcRenderer.on('notification', (sender, { content }) => {
+				dialog.innerText = content;
+				dialog.classList.add('active');
+
+				const newKey = Math.random().toString(36).slice(2);
+				dialogKey = newKey;
+
+				setTimeout(() => {
+					if (dialogKey === newKey) {
+						dialog.classList.remove('active');
+					}
+				}, 3000);
+			});
+		</script>
+	</body>
+</html>

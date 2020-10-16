@@ -1,5 +1,4 @@
 const {getTaskByType} = require('../task');
-const player = require('node-wav-player');
 const uuidv4 = require('uuid/v4');
 
 class Preset {
@@ -9,14 +8,11 @@ class Preset {
 		this.name = name;
 		this.tasks = new Map();
 		this.shortcuts = [];
+		this.lastActive = 0;
+		this.checkIsActive();
 	}
 
 	addShortcut(shortcut) {
-		const shortcutExists = this.app.presetManager.findPresetByShortcut(shortcut);
-		if(shortcutExists) {
-			return false;
-		}
-
 		this.shortcuts.push(shortcut);
 		this.app.registerShortcut(shortcut);
 		return true;
@@ -26,7 +22,10 @@ class Preset {
 		const shortcutIndex = this.shortcuts.findIndex(v => v === shortcut);
 		if(shortcutIndex >= 0) {
 			this.shortcuts.splice(shortcutIndex, 1);
-			this.app.unregisterShortcut(shortcut);
+
+			if (this.app.presetManager.findPresetsByShortcut(shortcut).length === 0) {
+				this.app.unregisterShortcut(shortcut);
+			}
 			return true;
 		}
 
@@ -60,13 +59,18 @@ class Preset {
 
 	execute() {
 		this.tasks.forEach(task => task.execute());
-		this.playExecuteSound().catch(() => {});
+		this.app.notifyExecution(this);
+		this.lastActive = Date.now();
 	}
 
-	async playExecuteSound() {
-		await player.play({
-			path: this.app.configs.get('waveFile')
-		});
+	isActive() {
+		return [...this.tasks.values()].every(task => task.isActive());
+	}
+
+	checkIsActive() {
+		if (this.isActive()) {
+			this.lastActive = Date.now();
+		}
 	}
 
 	refresh() {

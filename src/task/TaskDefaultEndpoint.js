@@ -21,6 +21,19 @@ class TaskDefaultEndpoint extends Task {
 		}
 	}
 
+	isActive() {
+		if(this.device.unknown) return true;
+
+		const endpointDevices = this.app.deviceManager.getDefaultEndpoints(this.device.type);
+
+		const targetEndpointDevices = Object.keys(this.role)
+			.filter(key => this.role[key])
+			.map(role => endpointDevices[role]);
+
+		return targetEndpointDevices.length > 0 &&
+			targetEndpointDevices.every(device => device.id === this.device.id);
+	}
+
 	refresh() {
 		this.device = this.app.deviceManager.findDeviceById(this.device.id, true);
 	}

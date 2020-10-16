@@ -6,7 +6,8 @@ class Config {
 		this.configs = {
 			enableTray: true,
 			quitOnExit: false,
-			waveFile: './app/audio/notify.wav'
+			waveFile: './app/audio/notify.wav',
+			notifyAtExecute: true
 		};
 
 		this.computed = {

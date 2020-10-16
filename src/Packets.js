@@ -160,4 +160,16 @@ module.exports = function registerPackets(app) {
 			result: app.deviceManager.exportDevices()
 		});
 	});
+
+	ipcMain.on('shortcutManager.interrupt', ({ sender }) => {
+		app.shortcutManager.disableShortcut(sender);
+	});
+
+	ipcMain.on('shortcutManager.resume', ({ sender }) => {
+		app.shortcutManager.enableShortcut();
+
+		sender.send('shortcutManager.resume', {
+			ok: true
+		});
+	});
 };

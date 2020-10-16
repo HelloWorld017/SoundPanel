@@ -1,6 +1,7 @@
 const {app, globalShortcut, nativeImage, protocol} = require('electron');
 const fs = require('fs');
 const isDev = require('electron-is-dev');
+const player = require('node-wav-player');
 const path = require('path');
 const registerPackets = require('./Packets');
 
@@ -8,6 +9,7 @@ const {BrowserWindow, Menu, Tray} = require('electron');
 const Config = require('./Config');
 const DeviceManager = require('./device/DeviceManager');
 const PresetManager = require('./preset/PresetManager');
+const ShortcutManager = require('./ShortcutManager');
 const LoopedBack = require('looped-back');
 
 class SoundPanel {
@@ -15,12 +17,14 @@ class SoundPanel {
 		this.looped = new LoopedBack();
 		this.deviceManager = new DeviceManager(this);
 		this.presetManager = new PresetManager(this);
+		this.shortcutManager = new ShortcutManager(this);
 		this.configs = new Config(this);
 
 		this.lastWriteRequest = 0;
 		this.configPath = path.resolve(app.getPath('userData'), 'config.json');
 
 		this.mainWindow = null;
+		this.dialogWindow = null;
 	}
 
 	async init() {
@@ -69,10 +73,6 @@ class SoundPanel {
 			await this.show();
 		}
 
-		app.on('window-all-closed', () => {
-			if(this.configs.get('quitOnExit')) this.beforeExit();
-		});
-
 		app.on('will-quit', () => {
 			this.looped.destroy();
 			globalShortcut.unregisterAll();
@@ -115,7 +115,7 @@ class SoundPanel {
 		);
 	}
 
-	async show() {
+	show() {
 		return new Promise(resolve => {
 			if(this.mainWindow) {
 				this.mainWindow.focus();
@@ -146,6 +146,10 @@ class SoundPanel {
 
 			this.mainWindow.on('closed', () => {
 				this.mainWindow = null;
+
+				if(this.configs.get('quitOnExit')) {
+					this.beforeExit();
+				}
 			});
 
 			this.mainWindow.loadURL('soundpanel://voltexpanel/');
@@ -153,6 +157,41 @@ class SoundPanel {
 		});
 	}
 
+	async showNotification(content) {
+		await new Promise(resolve => {
+			if(this.dialogWindow) return resolve();
+
+			this.dialogWindow = new BrowserWindow({
+				width: 300,
+				height: 100,
+				show: false,
+				frame: false,
+				transparent: true,
+				type: 'notification',
+				webPreferences: {
+					nodeIntegration: true
+				}
+			});
+			this.dialogWindow.setIgnoreMouseEvents(true);
+			this.dialogWindow.setAlwaysOnTop(true);
+			this.dialogWindow.isResizable(false);
+			this.dialogWindow.setPosition(50, 50);
+
+			this.dialogWindow.once('ready-to-show', () => {
+				resolve();
+			});
+
+			this.dialogWindow.on('closed', () => {
+				this.dialogWindow = null;
+			});
+
+			this.dialogWindow.loadURL('soundpanel://voltexpanel/dialog');
+		});
+
+		this.dialogWindow.show();
+		this.dialogWindow.webContents.send('notification', { content });
+		setTimeout(() => this.dialogWindow.hide(), 4000);
+	}
 
 	async beforeExit() {
 		await this.writePresets();
@@ -173,22 +212,11 @@ class SoundPanel {
 	}
 
 	registerShortcut(shortcut) {
-		if(Array.isArray(shortcut)) {
-			if(shortcut.length === 0) return;
-
-			// globalShortcut.registerAll doesn't work
-			return shortcut.forEach(sc => {
-				this.registerShortcut(sc);
-			});
-		}
-
-		return globalShortcut.register(
-			shortcut, () => this.presetManager.findPresetByShortcut(shortcut).execute()
-		);
+		return this.shortcutManager.registerShortcut(shortcut);
 	}
 
 	unregisterShortcut(shortcut) {
-		globalShortcut.unregister(shortcut);
+		return this.shortcutManager.unregisterShortcut(shortcut);
 	}
 
 	requestWritePresets() {
@@ -212,6 +240,14 @@ class SoundPanel {
 		}
 	}
 
+	async notifyExecution(preset) {
+		await player.play({
+			path: this.configs.get('waveFile')
+		}).catch(() => {});
+
+		await this.showNotification(preset.name);
+	}
+
 	registerProtocol() {
 		protocol.registerFileProtocol('soundpanel', (req, cb) => {
 			const reqPath = req.url
@@ -221,13 +257,18 @@ class SoundPanel {
 
 			const pathSplit = reqPath.split('/');
 
-			if(pathSplit[0] === 'dist') {
+			if (pathSplit[0] === 'dist') {
 				pathSplit.shift();
 				cb(path.resolve(__dirname, '..', 'dist', ...pathSplit));
 				return;
 			}
 
-			cb(path.resolve(__dirname, '..', 'index.html'));
+			if (pathSplit[0] === 'dialog') {
+				cb(path.resolve(__dirname, '..', 'views', 'dialog.html'));
+				return;
+			}
+
+			cb(path.resolve(__dirname, '..', 'views', 'index.html'));
 		});
 	}
 }
