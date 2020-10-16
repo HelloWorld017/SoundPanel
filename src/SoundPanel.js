@@ -82,6 +82,8 @@ class SoundPanel {
 			this.looped.destroy();
 			globalShortcut.unregisterAll();
 		});
+
+		app.on('window-all-closed', () => {});
 	}
 
 	updateMenu() {
@@ -151,7 +153,7 @@ class SoundPanel {
 
 			this.mainWindow.on('closed', () => {
 				this.mainWindow = null;
-
+				
 				if(this.configs.get('quitOnExit')) {
 					this.beforeExit();
 				}

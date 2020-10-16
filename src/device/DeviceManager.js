@@ -26,7 +26,11 @@ class DeviceManager {
 		const sourceDevice = this.findDeviceById(sourceId);
 		if(!sourceDevice || sourceDevice.type !== LoopedBack.DEVICE_CAPTURE) return null;
 
-		return this.findDeviceById(this.app.looped.getLoopback(sourceId));
+		try {
+			return this.findDeviceById(this.app.looped.getLoopback(sourceId));
+		} catch(err) {
+			return null;
+		}
 	}
 
 	setLoopback(sourceId, targetId) {
@@ -56,19 +60,27 @@ class DeviceManager {
 		if(!types.includes(type)) return null;
 		if(!roles.includes(role)) return null;
 
-		return this.findDeviceById(this.app.looped.getDefaultEndpoint(type)[role]);
+		try {
+			return this.findDeviceById(this.app.looped.getDefaultEndpoint(type)[role]);
+		} catch(err) {
+			return null;
+		}
 	}
 
 	getDefaultEndpoints(type) {
 		if(!types.includes(type)) return {};
 
-		const endpointIds = this.app.looped.getDefaultEndpoint(type);
-		const endpointDevices = {};
-		for (const role of endpointIds) {
-			endpointDevices[role] = this.findDeviceById(endpointIds[role]);
-		}
+		try {
+			const endpointIds = this.app.looped.getDefaultEndpoint(type);
+			const endpointDevices = {};
+			for (const role of endpointIds) {
+				endpointDevices[role] = this.findDeviceById(endpointIds[role]);
+			}
 
-		return endpointDevices;
+			return endpointDevices;
+		} catch(err) {
+			return {};
+		}
 	}
 
 	setDefaultEndpoint(deviceId, role) {
