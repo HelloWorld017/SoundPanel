@@ -69,15 +69,15 @@
     "vue-template-compiler": "^2.6.10",
     "webpack": "^4.36.1",
     "webpack-cli": "^3.3.6",
-    "webpack-dev-server": "^3.7.2"
+    "webpack-dev-server": "^3.11.0"
   },
   "build": {
     "appId": "com.khinenw.soundpanel",
     "files": [
       "src/**/*",
-      "index.html",
-	  "dist/**/*",
-	  "app/images/logo.png"
+      "dist/**/*",
+      "views/**/*",
+      "app/images/logo.png"
     ],
     "extraFiles": [
       "app/audio/notify.wav"
