@@ -13,7 +13,8 @@
 				<div class="KeyDialog__help">
 					Click / ESC to cancel.<br>
 					<template v-if="!currentInput">
-						Input keys with modifier to add.
+						Input keys with modifier to add.<br>
+						Assigning same keys with other presets will cycle over presets.
 					</template>
 					<template v-else>
 						Hold current input for 2s!

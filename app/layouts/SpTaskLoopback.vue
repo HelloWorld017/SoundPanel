@@ -108,7 +108,7 @@
 			},
 
 			finished() {
-				return !!this.task.source && !!this.task.target;
+				return !!this.task.source;
 			}
 		},
 

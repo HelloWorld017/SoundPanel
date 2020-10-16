@@ -34,8 +34,8 @@ class DeviceManager {
 		const targetDevice = this.findDeviceById(targetId);
 
 		if(
-			!sourceDevice || sourceDevice.type !== LoopedBack.DEVICE_CAPTURE ||
-			!targetDevice || targetDevice.type !== LoopedBack.DEVICE_RENDER
+			(!sourceDevice || sourceDevice.type !== LoopedBack.DEVICE_CAPTURE) ||
+			(targetId && (!targetDevice || targetDevice.type !== LoopedBack.DEVICE_RENDER))
 		) {
 			return false;
 		}
@@ -43,6 +43,10 @@ class DeviceManager {
 		const result = this.app.looped.setLoopback(sourceId, targetId);
 
 		if(!result) return false;
+
+		if (this.app.isDev) {
+			console.log(`SetLoopback: ${sourceDevice.name} -> ${targetDevice && targetDevice.name}`);
+		}
 
 		sourceDevice.loopback = targetId;
 		return true;
@@ -81,6 +85,10 @@ class DeviceManager {
 
 		const result = this.app.looped.setDefaultEndpoint(deviceId, role);
 		if(!result) return false;
+
+		if (this.app.isDev) {
+			console.log(`SetDefaultEndpoint: ${device.name} with Role ${role}`);
+		}
 
 		originalDevice.removeRole(role);
 		device.addRole(role);

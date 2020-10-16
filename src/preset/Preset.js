@@ -9,7 +9,6 @@ class Preset {
 		this.tasks = new Map();
 		this.shortcuts = [];
 		this.lastActive = 0;
-		this.checkIsActive();
 	}
 
 	addShortcut(shortcut) {
@@ -69,6 +68,10 @@ class Preset {
 
 	checkIsActive() {
 		if (this.isActive()) {
+			if (this.app.isDev) {
+				console.log(`Active Preset: ${this.name}`);
+			}
+
 			this.lastActive = Date.now();
 		}
 	}

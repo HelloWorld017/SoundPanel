@@ -14,6 +14,8 @@ const LoopedBack = require('looped-back');
 
 class SoundPanel {
 	constructor() {
+		this.isDev = isDev;
+
 		this.looped = new LoopedBack();
 		this.deviceManager = new DeviceManager(this);
 		this.presetManager = new PresetManager(this);
@@ -25,6 +27,8 @@ class SoundPanel {
 
 		this.mainWindow = null;
 		this.dialogWindow = null;
+
+		this.notificationQueue = null;
 	}
 
 	async init() {
@@ -41,7 +45,7 @@ class SoundPanel {
 			this.mainWindow.focus();
 		});
 
-		const args = process.argv.slice(isDev ? 2 : 1);
+		const args = process.argv.slice(this.isDev ? 2 : 1);
 
 		await this.readPresets();
 
@@ -49,6 +53,7 @@ class SoundPanel {
 
 		this.registerProtocol();
 		this.presetManager.presets.forEach(preset => {
+			preset.checkIsActive();
 			this.registerShortcut(preset.shortcuts);
 		});
 
@@ -153,7 +158,7 @@ class SoundPanel {
 			});
 
 			this.mainWindow.loadURL('soundpanel://voltexpanel/');
-			if(isDev) this.mainWindow.toggleDevTools();
+			if(this.isDev) this.mainWindow.toggleDevTools();
 		});
 	}
 
@@ -188,9 +193,22 @@ class SoundPanel {
 			this.dialogWindow.loadURL('soundpanel://voltexpanel/dialog');
 		});
 
+		if (Array.isArray(this.notificationQueue)) {
+			this.notificationQueue.push(content);
+			return;
+		}
+
 		this.dialogWindow.show();
-		this.dialogWindow.webContents.send('notification', { content });
-		setTimeout(() => this.dialogWindow.hide(), 4000);
+		this.notificationQueue = [ content ];
+
+		while(this.notificationQueue.length > 0) {
+			const item = this.notificationQueue.shift();
+			this.dialogWindow.webContents.send('notification', { content: item });
+
+			await new Promise(resolve => setTimeout(resolve, 4000));
+		}
+		this.notificationQueue = null;
+		this.dialogWindow.hide();
 	}
 
 	async beforeExit() {
