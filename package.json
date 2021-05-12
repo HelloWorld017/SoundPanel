@@ -62,7 +62,7 @@
     "less": "^3.9.0",
     "less-loader": "^5.0.0",
     "mini-css-extract-plugin": "^0.8.0",
-    "postcss": "^7.0.17",
+    "postcss": "^8.2.10",
     "postcss-loader": "^3.0.0",
     "vue-loader": "^15.7.1",
     "vue-svg-loader": "^0.12.0",
