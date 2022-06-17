@@ -54,7 +54,7 @@
     "babel-loader": "^8.0.6",
     "cross-env": "^5.2.0",
     "css-loader": "^3.1.0",
-    "electron": "^5.0.7",
+    "electron": "^15.5.5",
     "electron-builder": "^21.1.1",
     "electron-builder-squirrel-windows": "^21.1.2",
     "electron-rebuild": "^1.8.5",
